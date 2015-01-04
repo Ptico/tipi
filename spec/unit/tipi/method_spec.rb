@@ -3,6 +3,17 @@ require 'spec_helper'
 RSpec.describe Tipi::Method do
   VERBS = %w[GET POST PUT PATCH DELETE HEAD TRACE OPTIONS]
 
+  describe '.all' do
+    subject { described_class.all }
+
+    VERBS.each do |verb|
+      it "should contain #{verb}" do
+        expect(subject.map(&:verb)).to include(verb)
+      end
+    end
+  end
+
+
   describe '.[]' do
     context 'when verb is upcased string' do
       it 'should return method instance' do
