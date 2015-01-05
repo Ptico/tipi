@@ -41,12 +41,58 @@ RSpec.describe Tipi::Status do
     end
   end
 
-  describe 'statuses without entity body' do
+  describe '#allows_entity_body?' do
+    let(:prohibited_statuses) { [100, 101, 102, 204, 205, 304] }
 
+    context 'when entity body prohibited' do
+      let(:statuses) do
+        Tipi::Status.all.select { |s| prohibited_statuses.include?(s.code) }
+      end
+
+      it 'is false' do
+        statuses.each do |status|
+          expect(status.allows_entity_body?).to be(false)
+        end
+      end
+    end
+
+    context 'when entity body allowed' do
+      let(:statuses) do
+        Tipi::Status.all.reject { |s| prohibited_statuses.include?(s.code) }
+      end
+
+      it 'is true' do
+        expect(status.allows_entity_body?).to be(true)
+      end
+    end
   end
 
-  describe 'non-cacheable statuses' do
+  describe '#allows_caching?' do
+    let(:allowed_statuses) { Set[200, 203, 204, 206, 300, 301, 404, 405, 410, 414, 501] }
 
+    context 'when caching allowed' do
+      let(:statuses) do
+        Tipi::Status.all.select { |s| allowed_statuses.include?(s.code)}
+      end
+
+      it 'is true' do
+        statuses.each do |status|
+          expect(status.allows_caching?).to be(true)
+        end
+      end
+    end
+
+    context 'when caching prohibited' do
+      let(:statuses) do
+        Tipi::Status.all.reject { |s| allowed_statuses.include?(s.code)}
+      end
+
+      it 'is false' do
+        statuses.each do |status|
+          expect(status.allows_caching?).to be(false)
+        end
+      end
+    end
   end
 
 end
