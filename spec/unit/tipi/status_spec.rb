@@ -46,8 +46,28 @@ RSpec.describe Tipi::Status do
     end
   end
 
-  describe '.valid?' do
+  describe '.registered?' do
+    subject { described_class.registered?(status) }
 
+    context 'when status is present' do
+      context 'integer' do
+        let(:status) { 200 }
+
+        it { expect(subject).to be(true) }
+      end
+
+      context 'string' do
+        let(:status) { '200' }
+
+        it { expect(subject).to be(true) }
+      end
+    end
+
+    context 'when status is not present' do
+      let(:status) { 666 }
+
+      it { expect(subject).to be(false) }
+    end
   end
 
   describe '.type' do

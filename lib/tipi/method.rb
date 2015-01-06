@@ -31,7 +31,7 @@ module Tipi
         end
       end
 
-      def valid?(verb)
+      def registered?(verb)
         @registry.has_key?(verb.to_s.upcase)
       end
 

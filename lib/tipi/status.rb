@@ -29,6 +29,10 @@ module Tipi
         @registry[status] = new(status, name, cacheable, allows_body)
       end
 
+      def registered?(status)
+        @registry.has_key?(status.to_i)
+      end
+
       def type(status)
         TYPES[status.to_i / 100]
       end
@@ -57,6 +61,8 @@ module Tipi
 
       @cacheable   = cacheable
       @allows_body = allows_body
+
+      freeze
     end
 
   end

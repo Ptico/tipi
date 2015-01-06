@@ -81,8 +81,8 @@ RSpec.describe Tipi::Method do
     end
   end
 
-  describe '.valid?' do
-    subject { described_class.valid?(verb) }
+  describe '.registered?' do
+    subject { described_class.registered?(verb) }
 
     context 'when verb is present' do
       context 'upcased string' do
