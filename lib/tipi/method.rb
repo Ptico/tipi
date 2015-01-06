@@ -11,9 +11,9 @@ module Tipi
         @registry.fetch(verb.to_s.upcase, *args, &block)
       end
 
-      def register(verb, safe: false, idempotent: false, cacheable: false)
+      def register(verb, safe: false, idempotent: false, cacheable: false, allows_body: true)
         verb = verb.to_s.upcase
-        meth = new(verb, safe, idempotent, cacheable)
+        meth = new(verb, safe, idempotent, cacheable, allows_body)
 
         const_set(verb.gsub('-', '_'), meth)
 
@@ -89,6 +89,13 @@ module Tipi
     end
 
     ##
+    # Returns: {Boolean} false if entity body MUST not be present in the response
+    #
+    def allows_body?
+      @allows_body
+    end
+
+    ##
     # Inspect
     #
     def inspect
@@ -97,11 +104,12 @@ module Tipi
 
   private
 
-    def initialize(verb, safe, idempotent, cacheable)
+    def initialize(verb, safe, idempotent, cacheable, allows_body)
       @verb = verb
       @safe = safe
-      @idempotent = idempotent
-      @cacheable  = cacheable
+      @idempotent  = idempotent
+      @cacheable   = cacheable
+      @allows_body = allows_body
 
       @to_sym = verb.downcase.to_sym
 
@@ -115,7 +123,9 @@ module Tipi
   Method.register('PUT', idempotent: true)
   Method.register('PATCH')
   Method.register('DELETE', idempotent: true)
-  Method.register('HEAD', safe: true, idempotent: true, cacheable: true)
-  Method.register('TRACE', safe: true, idempotent: true)
+  Method.register('HEAD', safe: true, idempotent: true, cacheable: true, allows_body: false)
+  Method.register('TRACE', safe: true, idempotent: true, allows_body: false)
   Method.register('OPTIONS', safe: true, idempotent: true)
+  Method.register('LINK', idempotent: true)
+  Method.register('UNLINK', idempotent: true)
 end

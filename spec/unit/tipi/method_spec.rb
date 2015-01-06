@@ -123,10 +123,14 @@ RSpec.describe Tipi::Method do
     it { expect(subject).to_not be_head }
     it { expect(subject).to_not be_trace }
     it { expect(subject).to_not be_options }
+    it { expect(subject).to_not be_link }
+    it { expect(subject).to_not be_unlink }
 
     it { expect(subject).to be_safe       }
     it { expect(subject).to be_idempotent }
     it { expect(subject).to be_cacheable  }
+
+    it { expect(subject.allows_body?).to be(true) }
 
     it { expect(subject.to_sym).to equal(:get) }
     it { expect(subject.to_s).to   eql('GET')  }
@@ -145,10 +149,14 @@ RSpec.describe Tipi::Method do
     it { expect(subject).to_not be_head }
     it { expect(subject).to_not be_trace }
     it { expect(subject).to_not be_options }
+    it { expect(subject).to_not be_link }
+    it { expect(subject).to_not be_unlink }
 
     it { expect(subject).to_not be_safe       }
     it { expect(subject).to_not be_idempotent }
     it { expect(subject).to_not be_cacheable  }
+
+    it { expect(subject.allows_body?).to be(true) }
 
     it { expect(subject.to_sym).to equal(:post) }
     it { expect(subject.to_s).to   eql('POST')  }
@@ -167,10 +175,14 @@ RSpec.describe Tipi::Method do
     it { expect(subject).to_not be_head }
     it { expect(subject).to_not be_trace }
     it { expect(subject).to_not be_options }
+    it { expect(subject).to_not be_link }
+    it { expect(subject).to_not be_unlink }
 
     it { expect(subject).to_not be_safe       }
     it { expect(subject).to     be_idempotent }
     it { expect(subject).to_not be_cacheable  }
+
+    it { expect(subject.allows_body?).to be(true) }
 
     it { expect(subject.to_sym).to equal(:put) }
     it { expect(subject.to_s).to   eql('PUT')  }
@@ -189,10 +201,14 @@ RSpec.describe Tipi::Method do
     it { expect(subject).to_not be_head }
     it { expect(subject).to_not be_trace }
     it { expect(subject).to_not be_options }
+    it { expect(subject).to_not be_link }
+    it { expect(subject).to_not be_unlink }
 
     it { expect(subject).to_not be_safe       }
     it { expect(subject).to_not be_idempotent }
     it { expect(subject).to_not be_cacheable  }
+
+    it { expect(subject.allows_body?).to be(true) }
 
     it { expect(subject.to_sym).to equal(:patch) }
     it { expect(subject.to_s).to   eql('PATCH')  }
@@ -211,10 +227,14 @@ RSpec.describe Tipi::Method do
     it { expect(subject).to_not be_head }
     it { expect(subject).to_not be_trace }
     it { expect(subject).to_not be_options }
+    it { expect(subject).to_not be_link }
+    it { expect(subject).to_not be_unlink }
 
     it { expect(subject).to_not be_safe       }
     it { expect(subject).to     be_idempotent }
     it { expect(subject).to_not be_cacheable  }
+
+    it { expect(subject.allows_body?).to be(true) }
 
     it { expect(subject.to_sym).to equal(:delete) }
     it { expect(subject.to_s).to   eql('DELETE')  }
@@ -233,10 +253,14 @@ RSpec.describe Tipi::Method do
     it { expect(subject).to_not be_delete }
     it { expect(subject).to_not be_trace }
     it { expect(subject).to_not be_options }
+    it { expect(subject).to_not be_link }
+    it { expect(subject).to_not be_unlink }
 
     it { expect(subject).to be_safe       }
     it { expect(subject).to be_idempotent }
     it { expect(subject).to be_cacheable  }
+
+    it { expect(subject.allows_body?).to be(false) }
 
     it { expect(subject.to_sym).to equal(:head) }
     it { expect(subject.to_s).to   eql('HEAD')  }
@@ -255,10 +279,14 @@ RSpec.describe Tipi::Method do
     it { expect(subject).to_not be_delete }
     it { expect(subject).to_not be_head }
     it { expect(subject).to_not be_options }
+    it { expect(subject).to_not be_link }
+    it { expect(subject).to_not be_unlink }
 
     it { expect(subject).to     be_safe       }
     it { expect(subject).to     be_idempotent }
     it { expect(subject).to_not be_cacheable  }
+
+    it { expect(subject.allows_body?).to be(false) }
 
     it { expect(subject.to_sym).to equal(:trace) }
     it { expect(subject.to_s).to   eql('TRACE')  }
@@ -277,13 +305,70 @@ RSpec.describe Tipi::Method do
     it { expect(subject).to_not be_delete }
     it { expect(subject).to_not be_head }
     it { expect(subject).to_not be_trace }
+    it { expect(subject).to_not be_link }
+    it { expect(subject).to_not be_unlink }
 
     it { expect(subject).to     be_safe       }
     it { expect(subject).to     be_idempotent }
     it { expect(subject).to_not be_cacheable  }
 
+    it { expect(subject.allows_body?).to be(true) }
+
     it { expect(subject.to_sym).to equal(:options) }
     it { expect(subject.to_s).to   eql('OPTIONS')  }
     it { expect(subject.verb).to   eql('OPTIONS')  }
   end
+
+  describe 'LINK' do
+    subject { described_class::LINK }
+
+    it { expect(subject).to be_link }
+
+    it { expect(subject).to_not be_get }
+    it { expect(subject).to_not be_post }
+    it { expect(subject).to_not be_put }
+    it { expect(subject).to_not be_patch }
+    it { expect(subject).to_not be_delete }
+    it { expect(subject).to_not be_head }
+    it { expect(subject).to_not be_trace }
+    it { expect(subject).to_not be_options }
+    it { expect(subject).to_not be_unlink }
+
+    it { expect(subject).to_not be_safe       }
+    it { expect(subject).to     be_idempotent }
+    it { expect(subject).to_not be_cacheable  }
+
+    it { expect(subject.allows_body?).to be(true) }
+
+    it { expect(subject.to_sym).to equal(:link) }
+    it { expect(subject.to_s).to   eql('LINK')  }
+    it { expect(subject.verb).to   eql('LINK')  }
+  end
+
+  describe 'UNLINK' do
+    subject { described_class::UNLINK }
+
+    it { expect(subject).to be_unlink }
+
+    it { expect(subject).to_not be_get }
+    it { expect(subject).to_not be_post }
+    it { expect(subject).to_not be_put }
+    it { expect(subject).to_not be_patch }
+    it { expect(subject).to_not be_delete }
+    it { expect(subject).to_not be_head }
+    it { expect(subject).to_not be_trace }
+    it { expect(subject).to_not be_options }
+    it { expect(subject).to_not be_link }
+
+    it { expect(subject).to_not be_safe       }
+    it { expect(subject).to     be_idempotent }
+    it { expect(subject).to_not be_cacheable  }
+
+    it { expect(subject.allows_body?).to be(true) }
+
+    it { expect(subject.to_sym).to equal(:unlink) }
+    it { expect(subject.to_s).to   eql('UNLINK')  }
+    it { expect(subject.verb).to   eql('UNLINK')  }
+  end
+
 end
