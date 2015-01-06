@@ -44,6 +44,10 @@ module Tipi
 
     attr_reader :type
 
+    attr_reader :to_s
+
+    alias :to_i :code
+
     def allows_body?
       @allows_body
     end
@@ -61,6 +65,8 @@ module Tipi
 
       @cacheable   = cacheable
       @allows_body = allows_body
+
+      @to_s = code.to_s
 
       freeze
     end

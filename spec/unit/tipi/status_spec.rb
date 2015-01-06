@@ -178,4 +178,14 @@ RSpec.describe Tipi::Status do
     end
   end
 
+  describe '#to_i' do
+    it { expect(described_class[100].to_i).to equal(100) }
+    it { expect(described_class[404].to_i).to equal(404) }
+  end
+
+  describe '#to_s' do
+    it { expect(described_class[100].to_s).to eql('100') }
+    it { expect(described_class[302].to_s).to eql('302') }
+  end
+
 end
