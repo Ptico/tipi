@@ -12,23 +12,20 @@ module Tipi
       end
 
       def register(verb, safe: false, idempotent: false, cacheable: false, allows_body: true)
-        verb = verb.to_s.upcase
+        verb = verb.to_s.upcase.freeze
         meth = new(verb, safe, idempotent, cacheable, allows_body)
 
-        const_set(verb.gsub('-', '_'), meth)
+        rubified_verb = verb.gsub('-', '_')
+        const_set(rubified_verb, meth)
+        @registry[verb] = meth
 
-        @registry[verb.to_s.upcase.freeze] = meth
+        name = "#{rubified_verb.downcase}?"
 
-        all.each do |meth|
-          verb = meth.verb
-          name = "#{verb.downcase}?"
-
-          class_eval(<<-METH, __FILE__, __LINE__+1)
-            def #{name}
-              @verb == "#{verb}"
-            end
-          METH
-        end
+        class_eval(<<-METH, __FILE__, __LINE__+1)
+          def #{name}
+            @verb == "#{verb}"
+          end
+        METH
       end
 
       def registered?(verb)
