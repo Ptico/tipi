@@ -38,20 +38,48 @@ module Tipi
       end
     end
 
+    private_class_method :new
+
+    ##
+    # Status code
+    #
+    # Returns: {Fixnum}
+    #
     attr_reader :code
 
+    ##
+    # Status description
+    #
+    # Returns: {String}
+    #
     attr_reader :name
 
+    ##
+    # Class of status
+    #
+    # Returns: {Symbol}
+    #
     attr_reader :type
 
+    ##
+    # String representation of status code
+    #
+    # Returns: {String}
+    #
     attr_reader :to_s
 
     alias :to_i :code
 
+    ##
+    # Returns: {Boolean} false if entity body MUST not be present in the response
+    #
     def allows_body?
       @allows_body
     end
 
+    ##
+    # Returns: {Boolean} true if this status cacheable
+    #
     def cacheable?
       @cacheable
     end
