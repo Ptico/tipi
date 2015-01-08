@@ -84,6 +84,13 @@ module Tipi
       @cacheable
     end
 
+    ##
+    # Inspect
+    #
+    def inspect
+      "#<Tipi::Status::#{@code} (#{@name}) type=:#{@type} allows_body=#{@allows_body} cacheable=#{@cacheable}>"
+    end
+
   private
 
     def initialize(code, name, cacheable, allows_body)
