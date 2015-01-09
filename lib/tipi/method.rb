@@ -1,16 +1,73 @@
 module Tipi
+  ##
+  # Class: an HTTP request method representation
+  #
   class Method
     @registry = {}
 
     class << self
+      ##
+      # Static: Get method by verb. Case-sensitive
+      #
+      # Params:
+      # - verb {String} uppercased string
+      #
+      # Returns: {Tipi::Method} or nil if verb doesn't exists
+      #
+      # Examples:
+      #
+      #     Tipi::Method['GET'] # => #<Tipi::Method::GET ...>
+      #     Tipi::Method['get'] # => nil
+      #     Tipi::Method['SHI'] # => nil
+      #
       def [](verb)
         @registry[verb]
       end
 
+      ##
+      # Static: Fetch method by verb
+      #
+      # Params:
+      # - verb     {String|Symbol} HTTP verb, may be downcased
+      # - fallback {Tipi::Method}  default value
+      #
+      # Yields: block with default value
+      #
+      # Raises: {KeyError} exception if key not exists and no fallback given
+      #
+      # Returns: {Tipi::Method}
+      #
+      # Examples:
+      #
+      #     Tipi::Method.fetch('POST') # => #<Tipi::Method::POST ...>
+      #     Tipi::Method.fetch('post') # => #<Tipi::Method::POST ...>
+      #     Tipi::Method.fetch(:post)  # => #<Tipi::Method::POST ...>
+      #     Tipi::Method.fetch('shit', Tipi::Method::GET) # => #<Tipi::Method::GET ...>
+      #
+      #
       def fetch(verb, *args, &block)
         @registry.fetch(verb.to_s.upcase, *args, &block)
       end
 
+      ##
+      # Static: Register method
+      #
+      # Creates new instance of method, adds it to the list and register
+      # corresponding predicate instance method to class
+      #
+      # Params:
+      # - verb {String} HTTP verb
+      #
+      # Options:
+      # - :safe        {Boolean} true if method is safe (default: false)
+      # - :idempotent  {Boolean} true if method is idempotent (default: false)
+      # - :cacheable   {Boolean} true if method allows caching (default: false)
+      # - :allows_body {Boolean} false if method MUST not contain body (default: true)
+      #
+      # Examples:
+      #
+      #     Tipi::Method.register('BIND', idempotent: true)
+      #
       def register(verb, safe: false, idempotent: false, cacheable: false, allows_body: true)
         verb = verb.to_s.upcase.freeze
         meth = new(verb, safe, idempotent, cacheable, allows_body)
@@ -28,10 +85,30 @@ module Tipi
         METH
       end
 
+      ##
+      # Static: check if method verb is registered
+      #
+      # Params:
+      # - verb {String|Symbol} HTTP verb
+      #
+      # Returns: {Boolean} true if method registered
+      #
+      # Examples:
+      #
+      #     Tipi::Method.registered?('GET') # => true
+      #     Tipi::Method.registered?('get') # => true
+      #     Tipi::Method.registered?(:get)  # => true
+      #     Tipi::Method.registered?(:shit) # => false
+      #
       def registered?(verb)
         @registry.has_key?(verb.to_s.upcase)
       end
 
+      ##
+      # Static: get full list of registered methods
+      #
+      # Returns: {Array}
+      #
       def all
         @registry.values
       end
@@ -40,12 +117,17 @@ module Tipi
     private_class_method :new
 
     ##
-    # Request verb
+    # HTTP verb
     #
     # Returns: {String}
     #
     attr_reader :verb
 
+    ##
+    # HTTP verb as a downcased symbol
+    #
+    # Returns: {Symbol}
+    #
     attr_reader :to_sym
 
     alias :to_s :verb
@@ -93,7 +175,9 @@ module Tipi
     end
 
     ##
-    # Inspect
+    # Inspect object
+    #
+    # Returns: {String}
     #
     def inspect
       "#<Tipi::Method::#{@verb} safe=#{@safe} idempotent=#{@idempotent} cacheable=#{@cacheable}>"
@@ -101,6 +185,16 @@ module Tipi
 
   private
 
+    ##
+    # Constructor:
+    #
+    # Params:
+    # - verb        {String}  HTTP verb
+    # - safe        {Boolean} mark method as safe
+    # - idempotent  {Boolean} mark method as idempotent
+    # - cacheable   {Boolean} tell that method allowes caching
+    # - allows_body {Boolean} tell that method MUST not contain body
+    #
     def initialize(verb, safe, idempotent, cacheable, allows_body)
       @verb = verb
       @safe = safe
