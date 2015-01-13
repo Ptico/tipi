@@ -18,7 +18,7 @@ module Tipi
       #
       #     Tipi::Method['GET'] # => #<Tipi::Method::GET ...>
       #     Tipi::Method['get'] # => nil
-      #     Tipi::Method['SHI'] # => nil
+      #     Tipi::Method['WAT'] # => nil
       #
       def [](verb)
         @registry[verb]
@@ -98,7 +98,7 @@ module Tipi
       #     Tipi::Method.registered?('GET') # => true
       #     Tipi::Method.registered?('get') # => true
       #     Tipi::Method.registered?(:get)  # => true
-      #     Tipi::Method.registered?(:shit) # => false
+      #     Tipi::Method.registered?(:wat) # => false
       #
       def registered?(verb)
         @registry.has_key?(verb.to_s.upcase)
@@ -192,8 +192,8 @@ module Tipi
     # - verb        {String}  HTTP verb
     # - safe        {Boolean} mark method as safe
     # - idempotent  {Boolean} mark method as idempotent
-    # - cacheable   {Boolean} tell that method allowes caching
-    # - allows_body {Boolean} tell that method MUST not contain body
+    # - cacheable   {Boolean} tell that method allows response caching
+    # - allows_body {Boolean} tell that response to the method MUST not contain body
     #
     def initialize(verb, safe, idempotent, cacheable, allows_body)
       @verb = verb
