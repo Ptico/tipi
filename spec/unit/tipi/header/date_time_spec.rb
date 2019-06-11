@@ -5,11 +5,22 @@ RSpec.describe Tipi::Header::DateTime do
     subject { described_class.new(header_name).call(header_value) }
 
     let(:header_name) { 'Expires' }
-    let(:header_value) { 'Sat, 19 Jan 2038 03:14:08 UTC' }
 
-    it 'should assign value' do
-      expect(subject.value).to eql(::DateTime.new(2038, 1, 19, 3, 14, 8, 0))
-      expect(subject.http_value).to eql(header_value)
+    context 'when date is valid RFC2616 date' do
+      let(:header_value) { 'Sat, 19 Jan 2038 03:14:08 GMT' }
+
+      it 'should assign value' do
+        expect(subject.value).to eql(::DateTime.new(2038, 1, 19, 3, 14, 8, 0))
+        expect(subject.http_value).to eql(header_value)
+      end
+    end
+
+    context 'when date is invalid' do
+      let(:header_value) { 'Sat, 19 Jan 2038 03:14:08 UTC' }
+
+      it 'should raise an error' do
+        expect { subject.value }.to raise_error(ArgumentError, 'invalid date')
+      end
     end
   end
 
@@ -23,6 +34,22 @@ RSpec.describe Tipi::Header::DateTime do
 
       it 'should assign value' do
         expect(subject.http_value).to eql('Mon, 21 Jul 1969 02:56:15 GMT')
+      end
+    end
+
+    context 'when time' do
+      let(:header_value) { ::Time.new(2012, 8, 6, 5, 17) }
+
+      it 'should assign value' do
+        expect(subject.http_value).to eql('Mon, 06 Aug 2012 02:17:00 GMT')
+      end
+    end
+
+    context 'when date' do
+      let(:header_value) { ::Date.new(1990, 8, 24) }
+
+      it 'should assign value' do
+        expect(subject.http_value).to eql('Fri, 24 Aug 1990 00:00:00 GMT')
       end
     end
 

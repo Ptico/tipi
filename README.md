@@ -80,3 +80,22 @@ Tipi::Status.register(226, 'IM Used', cacheable: false, allows_body: true)
 Tipi::Method.registered?(226) # => true
 Tipi::Method.registered?('226') # => true (the same)
 ```
+
+### Header
+
+```ruby
+rule = Tipi::Header['If-Modified-Since'].call('Mon, 06 Aug 2012 02:17:00 GMT')
+rule.value.year #=> 2012
+rule.value.day #=> 6
+rule.to_s #=> "If-Modified-Since: Mon, 06 Aug 2012 02:17:00 GMT"
+
+exp = Tipi::Header['Expires'].set(Time.now + 300)
+flush_cache! if exp.value > DateTime.now
+
+exp = Tipi::Header['Expires'].set('29 Aug 1997')
+exp.http_value #=> 'Fri, 29 Aug 1997 00:00:00 GMT'
+
+cl = Tipi::Header['Content-Length'].call('2100')
+cl.value #=> 2100
+rule.to_s #=> 'Content-Length: 2100'
+```

@@ -21,7 +21,7 @@ module Tipi
       # - val {String} HTTP string value
       #
       def parse_http_string(val)
-        ::DateTime.parse(val)
+        ::DateTime.httpdate(val)
       end
 
       ##
@@ -36,11 +36,13 @@ module Tipi
         case val
           when ::DateTime
             val.dup
+          when ::Date, ::Time
+            val.to_datetime
           when ::String
             ::DateTime.parse(val)
           when ::Integer
             ::Time.at(val).to_datetime
-        end.new_offset(0).strftime('%a, %d %b %Y %H:%M:%S GMT')
+        end.httpdate
       end
     end
 
