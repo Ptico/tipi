@@ -97,5 +97,5 @@ exp.http_value #=> 'Fri, 29 Aug 1997 00:00:00 GMT'
 
 cl = Tipi::Header['Content-Length'].call('2100')
 cl.value #=> 2100
-rule.to_s #=> 'Content-Length: 2100'
+cl.to_s #=> 'Content-Length: 2100'
 ```
