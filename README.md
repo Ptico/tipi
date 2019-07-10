@@ -77,8 +77,8 @@ It can also be registered:
 Tipi::Status.registered?(226) # => false
 Tipi::Status.register(226, 'IM Used', cacheable: false, allows_body: true)
 
-Tipi::Method.registered?(226) # => true
-Tipi::Method.registered?('226') # => true (the same)
+Tipi::Status.registered?(226) # => true
+Tipi::Status.registered?('226') # => true (the same)
 ```
 
 ### Header
