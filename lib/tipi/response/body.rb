@@ -6,10 +6,8 @@ module Tipi
           self::String.new(value)
         elsif value.kind_of?(::Array)
           self::Array.new(value)
-        elsif value.respond_to?(:read)
-          self::IO.new(value)
         else
-          fail ArgumentError, 'body must be a String, Array or IO'
+          fail ArgumentError, 'body must be a String or Array'
         end
       end
 
@@ -40,4 +38,3 @@ end
 
 require 'tipi/response/body/array'
 require 'tipi/response/body/string'
-require 'tipi/response/body/io'

@@ -53,6 +53,11 @@ RSpec.describe Tipi::Header do
     end
   end
 
+  describe '#add' do
+
+  end
+
+
   describe '#name' do
     subject { described_class.new(header_name).name }
 

@@ -2,8 +2,13 @@ module Tipi
   ##
   # Class: an HTTP header representation
   #
+  # https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+  # https://tools.ietf.org/html/rfc7234#section-5
+  #
   class Header
     @registry = {}
+
+    EOF = "\r\n".freeze
 
     class << self
       ##
@@ -62,6 +67,13 @@ module Tipi
     end
 
     ##
+    # Add header value if multiple values allowed
+    #
+    def add(val)
+
+    end
+
+    ##
     # Set header value from raw HTTP string
     #
     # Params:
@@ -85,8 +97,12 @@ module Tipi
       @http_value ||= build_http_string(@value)
     end
 
+    def to_http_string
+      "#{name}: #{http_value}#{EOF}"
+    end
+
     def to_s
-      "#{@name}: #{@http_value}"
+      "#{name}: #{http_value}"
     end
 
   private

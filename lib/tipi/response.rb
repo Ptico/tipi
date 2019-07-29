@@ -1,5 +1,6 @@
 module Tipi
   class Response
+
     def initialize
       yield if block_given?
     end
@@ -18,7 +19,7 @@ module Tipi
     # Set response body
     #
     def body=(response_body)
-      @body = Body.new(response_body)
+      @body = Body.call(response_body)
     end
 
     ##
@@ -33,3 +34,4 @@ module Tipi
 end
 
 require 'tipi/response/body'
+require 'tipi/response/headers'
