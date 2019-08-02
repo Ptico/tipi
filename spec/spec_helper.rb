@@ -5,6 +5,8 @@ if ENV['COVERAGE']
   end
 end
 
+require 'securerandom'
+
 require 'tipi'
 
 require 'pry'
