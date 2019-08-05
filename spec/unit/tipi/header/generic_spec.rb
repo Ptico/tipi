@@ -3,6 +3,53 @@ require 'spec_helper'
 RSpec.describe Tipi::Header::Generic do
   let(:instance) { described_class.new('Test-Header') }
 
+  describe 'tl;dr' do
+    describe 'this is default header implementation' do
+      it 'keeps incoming headers untouched' do
+        # The same as Tipi::Header['Some-Header']
+        header = described_class.new('Some-Header')
+        header.('very; weird=header=value')
+        expect(header.value).to eql('very; weird=header=value')
+      end
+
+      it 'set string values as is' do
+        header = described_class.new('Header-Name')
+        header.set('token; option=1')
+        expect(header.value).to eql('token; option=1')
+        expect(header.to_str).to eql('Some-Header: token; option=1')
+      end
+
+      it 'typecasts values' do
+        header = described_class.new('Answer')
+        header.set(42)
+        expect(header.value).to eql('42')
+        expect(header.to_str).to eql('Answer: 42')
+      end
+
+      it 'joins hash values' do
+        header = described_class.new('Hash')
+        header.set({ string: 'value', 'one' => 1 })
+        expect(header.value).to eql('string=value, one=1')
+        expect(header.to_str).to eql('Hash: string=value, one=1')
+      end
+
+      it 'joins arrays' do
+        header = described_class.new('Math')
+        header.set(['number', {'Pi' => 3.14 }, 16956])
+        expect(header.value).to eql('number, Pi=3,14')
+        expect(header.to_str).to eql('Math: number, Pi=3.14, 16956')
+      end
+
+      it 'add values' do
+        header = described_class.new('X-Content')
+        header.set('existing')
+        header.add('additional')
+        expect(header.value).to eql('existing, additional')
+        expect(header.to_str).to eql('X-Content: existing, additional')
+      end
+    end
+  end
+
   describe '#value' do
     subject { instance.value }
 
