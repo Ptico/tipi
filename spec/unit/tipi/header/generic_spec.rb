@@ -124,6 +124,42 @@ RSpec.describe Tipi::Header::Generic do
           end
         end
       end
+
+      context 'when hash' do
+        let(:header_value) do
+          { a: 1, 'foo' => 'bar' }
+        end
+
+        it '#value' do
+          it 'returns pairs of key=values' do
+            expect(subject).to eql('a=1, foo=bar')
+          end
+        end
+
+        it '#http_value' do
+          it 'returns pairs of key=values' do
+            expect(subject).to eql('a=1, foo=bar')
+          end
+        end
+      end
+
+      context 'whan array' do
+        let(:header_value) do
+          [ 'foo', 42, { a: 1 }]
+        end
+
+        it '#value' do
+          it 'returns pairs of key=values' do
+            expect(subject).to eql('foo, 42, a=1')
+          end
+        end
+
+        it '#http_value' do
+          it 'returns pairs of key=values' do
+            expect(subject).to eql('foo, 42, a=1')
+          end
+        end
+      end
     end
 
     context 'after #call' do
@@ -145,11 +181,11 @@ RSpec.describe Tipi::Header::Generic do
     end
 
     context 'after #set' do
-      subject { instance.new(header_name).set('foo').set(3.14) }
+      subject { instance.new(header_name).set('foo').set(['bar', 69]) }
 
       it 'replaces old value' do
-        expect(subject.value).to eql('3.14')
-        expect(subject.http_value).to eql('3.14')
+        expect(subject.value).to eql('bar, 69')
+        expect(subject.http_value).to eql('bar, 69')
       end
     end
   end
@@ -231,6 +267,42 @@ RSpec.describe Tipi::Header::Generic do
           end
         end
       end
+
+      context 'when hash' do
+        let(:header_value) do
+          { 'hello' => 7.8, b: 'world' }
+        end
+
+        it '#value' do
+          it 'returns pairs of key=values' do
+            expect(subject).to eql('hello=7.8, b=world')
+          end
+        end
+
+        it '#http_value' do
+          it 'returns pairs of key=values' do
+            expect(subject).to eql('hello=7.8, b=world')
+          end
+        end
+      end
+
+      context 'whan array' do
+        let(:header_value) do
+          [ 'hello', 7.8, { b: 'world' }]
+        end
+
+        it '#value' do
+          it 'returns pairs of key=values' do
+            expect(subject).to eql('hello, 7.8, b=world')
+          end
+        end
+
+        it '#http_value' do
+          it 'returns pairs of key=values' do
+            expect(subject).to eql('hello, 7.8, b=world')
+          end
+        end
+      end
     end
 
     context 'after #call' do
@@ -252,11 +324,11 @@ RSpec.describe Tipi::Header::Generic do
     end
 
     context 'after #add' do
-      subject { instance.new(header_name).add(42).add(3.14) }
+      subject { instance.new(header_name).add(42).add(['route', 66]) }
 
       it 'adds value' do
-        expect(subject.value).to eql('42, 3.14')
-        expect(subject.http_value).to eql('42, 3.14')
+        expect(subject.value).to eql('42, route, 66')
+        expect(subject.http_value).to eql('42, route, 66')
       end
     end
   end
