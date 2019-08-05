@@ -47,6 +47,13 @@ RSpec.describe Tipi::Header::Generic do
         expect(header.value).to eql('existing, additional')
         expect(header.to_str).to eql('X-Content: existing, additional')
       end
+
+      it 'may build a little bit more complex values' do
+        header = described_class.new('Set-Something')
+        header.set('token;')
+        header.add({ option: 1 })
+        expect(header.value).to eql('token; option=1')
+      end
     end
   end
 
